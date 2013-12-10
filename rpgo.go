@@ -2,11 +2,15 @@ package main
 
 import (
     "fmt"
-    "inout"
 )
 
 func main() {
     var c chan
-    inout.keyChannel(&c)
+    fmt.Println(keyChannel)
+    keyChannel(&c)
+    for {
+        key <- c
+        fmt.Println(string(key))
+    }
 }
 
