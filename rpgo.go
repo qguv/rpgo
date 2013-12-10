@@ -6,11 +6,9 @@ import (
 
 func main() {
     var c chan
-    fmt.Println(keyChannel)
-    keyChannel(&c)
+    go keyChannel(&c)
     for {
         key <- c
         fmt.Println(string(key))
     }
 }
-
