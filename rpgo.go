@@ -131,6 +131,9 @@ func keyChannel(c *chan<-) {
 
 	// termbox.Flush()
 
+func main() {
+    var c chan
+    go keyChannel(&c)
     for {
         ev := termbox.PollEvent()
         if ev.Type == termbox.EventKey {
@@ -143,4 +146,3 @@ func keyChannel(c *chan<-) {
         }
     }
 }
-
