@@ -1,9 +1,9 @@
 package main
 
 import (
-    "os"
-    "github.com/nsf/termbox-go"
     "errors"
+    "github.com/nsf/termbox-go"
+    "os"
 )
 
 type Coord struct {
@@ -31,7 +31,7 @@ func nextFromDimensions(dimensions Coord) NextCoord {
 
 type Keypair struct {
     ascii rune
-    meta termbox.Key
+    meta  termbox.Key
 }
 
 func eventsToChannels(keychan chan Keypair, dimchan chan Coord) {
@@ -45,7 +45,7 @@ func eventsToChannels(keychan chan Keypair, dimchan chan Coord) {
             keychan <- pair
         }
         if ev.Type == termbox.EventResize {
-            dimensions := Coord{ ev.Width, ev.Height }
+            dimensions := Coord{ev.Width, ev.Height}
             dimchan <- dimensions
         }
     }
@@ -53,7 +53,7 @@ func eventsToChannels(keychan chan Keypair, dimchan chan Coord) {
 
 func getFirstDimensions() Coord {
     ev := termbox.PollEvent()
-    dimensions := Coord{ ev.Width, ev.Height }
+    dimensions := Coord{ev.Width, ev.Height}
     return dimensions
 }
 
@@ -76,25 +76,24 @@ func main() {
 
     for {
         select {
-            case keys := <- keychan:
-                if keys.meta == termbox.KeyCtrlF {
-                    os.Exit(1)
-                }
-                termbox.SetCell(
-                    thisCoord.x,
-                    thisCoord.y,
-                    keys.ascii,
-                    termbox.ColorWhite,
-                    termbox.ColorBlack,
-                )
-                termbox.Flush()
-                thisCoord, err = getNext(thisCoord)
-                if err != nil {
-                    panic(err)
-                }
-            case dimensions := <- dimchan:
-                getNext = nextFromDimensions(dimensions)
+        case keys := <-keychan:
+            if keys.meta == termbox.KeyCtrlF {
+                os.Exit(1)
+            }
+            termbox.SetCell(
+                thisCoord.x,
+                thisCoord.y,
+                keys.ascii,
+                termbox.ColorWhite,
+                termbox.ColorBlack,
+            )
+            termbox.Flush()
+            thisCoord, err = getNext(thisCoord)
+            if err != nil {
+                panic(err)
+            }
+        case dimensions := <-dimchan:
+            getNext = nextFromDimensions(dimensions)
         }
     }
 }
-
